@@ -1,3 +1,5 @@
+set -e
+
 inputs=$(find data -name "*.in")
 
 for ifile in $inputs; do
