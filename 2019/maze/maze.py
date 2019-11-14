@@ -24,7 +24,7 @@ if not m:
   print(0)
   exit()
 
-#print("%d %d\n%s" % (r,c,"\n".join(m)))
+# print("%d %d\n%s" % (r,c,"\n".join(m)))
 
 firstbslash = True
 try:
@@ -73,15 +73,15 @@ if not c % 2:
 r2 = list(map(lambda b: int(not b), r1))
 
 explored = [copy(r1 if not i % 2 else r2) for i in range(r-1)]
-#print("\n".join("".join(str(c) for c in x) for x in explored))
+# print("\n".join("".join(str(c) for c in x) for x in explored))
 
 def neighbors(row,col):
   ret = []
-  if m[row][col] == '.' and row > 1 and col > 1:
+  if m[row][col] == '.' and row-1 >= 0 and col-1 >= 0:
     ret.append((row-1,col-1))
-  if m[row][col+1] == '.' and row > 1 and col+1 < c-1:
+  if m[row][col+1] == '.' and row-1 >= 0 and col+1 < c-1:
     ret.append((row-1,col+1))
-  if m[row+1][col] == '.' and row+1 < r-1 and col > 1:
+  if m[row+1][col] == '.' and row+1 < r-1 and col-1 >= 0:
     ret.append((row+1,col-1))
   if m[row+1][col+1] == '.' and row+1 < r-1 and col+1 < c-1:
     ret.append((row+1,col+1))
@@ -90,32 +90,50 @@ def neighbors(row,col):
 #print(boundary)
 
 #print(m[0][2], neighbors(2,0))
-#print("===\n%s\n%s\n%s\n===" % (m[0][1:4], m[1][1:4], m[2][1:4]))
+# print("===\n%s\n%s\n%s\n===" % (m[0][1:4], m[1][1:4], m[2][1:4]))
 
-while boundary:
-  bx, by = boundary.pop()
-  #print(">", bx, by)
-  if explored[bx][by]:
-    continue
-  explored[bx][by] = 1
-  boundary.update(neighbors(bx,by))
+def explore():
+  while boundary:
+    bx, by = boundary.pop()
+    # print(">", bx, by)
+    if explored[bx][by]:
+      continue
+    explored[bx][by] = 1
+    boundary.update(neighbors(bx,by))
 
-#print("\n".join("".join(str(c) for c in x) for x in explored))
+explore()
+
+# print("---")
+# print("\n".join("".join(str(c) for c in x) for x in explored))
+# print("---")
 
 enclosed_area = sum(line.count(0) for line in explored)
 #print(enclosed_area)
 
-inner_dots = 0
-for row in range(len(explored)-1):
+# inner_dots = 0
+count = 0
+# for row in range(len(explored)-1):
+for row in range(len(explored)):
   for col in range(len(r1)):
     if explored[row][col]:
       continue
-    if col > 0 and not explored[row+1][col-1] and m[row+1][col] == ".":
-      #print("< %d,%d -> %d,%d" % (row,col,row+1,col-1))
-      inner_dots += 1
-    if col < len(r1)-1 and not explored[row+1][col+1] and m[row+1][col+1] == ".":
-      #print("> %d,%d -> %d,%d" % (row,col,row+1,col+1))
-      inner_dots += 1
+    # print("++", row, col)
+    boundary.add((row,col))
+    explore()
+    count += 1
+
+    # print("---")
+    # print("\n".join("".join(str(c) for c in x) for x in explored))
+    # print("---")
+
+    # if col > 0 and not explored[row+1][col-1] and m[row+1][col] == ".":
+    #   #print("< %d,%d -> %d,%d" % (row,col,row+1,col-1))
+    #   inner_dots += 1
+    # if col < len(r1)-1 and not explored[row+1][col+1] and m[row+1][col+1] == ".":
+    #   #print("> %d,%d -> %d,%d" % (row,col,row+1,col+1))
+    #   inner_dots += 1
+
 #print(inner_dots)
 
-print(enclosed_area - inner_dots)
+# print(enclosed_area - inner_dots)
+print(count)
