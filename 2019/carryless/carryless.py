@@ -72,7 +72,7 @@ def even_digit_equiv(lhs_factor, rhs):
     # Solves the equivalence for d: lhs_factor * d = rhs
     # Assumes lhs_factor != 0 and lhs_factor is even
     if rhs == 0:
-        return [0]
+        return [0,5]
 
     if rhs % 2 == 1:
         return []
@@ -81,7 +81,7 @@ def even_digit_equiv(lhs_factor, rhs):
     for i in range(1,5):
         if factor == rhs:
             return [i,i+5]
-        factor = factor + lhs_factor % 10
+        factor = (factor + lhs_factor) % 10
     return []  # Should be unnecessary
 
 sol = carryless_sqrt(s)
