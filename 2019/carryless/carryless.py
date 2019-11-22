@@ -1,7 +1,7 @@
 # Carryless Square Root problem 2019
 # Created by: Hunter Damron
 # Points awarded: no
-# Status: incomplete
+# Status: complete
 # Notes: Transforms the problem into the square root of a polynomial modulo 10
 #        Worst case explores each of 2 options at 13 branches -> 2^13 = 8192
 
