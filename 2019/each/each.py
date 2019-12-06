@@ -3,10 +3,7 @@
 # Points awarded: no
 # Status: incomplete
 # Notes: Determines last instance of each number in the sequence then iterates
-#        through the list, adding point when they are either last or the next in
-#        the sequence
-#        TODO: we must find all elements before the next last and apply all
-#        of them
+#        through the lasts and adds everything before them in order
 
 n, k = (int(x) for x in input().split())
 X = [int(input())-1 for _ in range(n)]
@@ -14,32 +11,40 @@ X = [int(input())-1 for _ in range(n)]
 last = [None] * k
 for i, x in enumerate(X):
     last[x] = (x, i)
-last.sort(key=lambda x: x[1], reverse=True)
+last.sort(key=lambda x: x[1])
 
 seq = [None] * k
-j = 0
+j = 0  # Index on seq
 used = [False] * k
+i = 0  # Index on X
 intermediates = []
-for i, x in enumerate(X):
-    lastx, lasti = last[-1]
-    if lasti == i:
-        # This implies x == lastx
-        intermediates.sort()
-        jn = j + len(intermediates)
-        seq[j:jn] = intermediates
-        j = jn
-        for k in intermediates:
-            used[k] = True
-        intermediates = []
+# print(last)
+for lastx, lasti in last:
+    if used[lastx]:
+        # print("%d already used" % lastx)
+        continue
+    # print(":", lastx, lasti)
+    intermediates = X[i:lasti]
+    sintermediates = sorted((x for x in intermediates if not used[x]), reverse=True)
+    k = len(sintermediates) - 1  # Reversed index on intermediates
+    for x in intermediates:
+        # print("(1) %d == %d and %d >= 0 and %d == %d" % (x, lastx, k, x, sintermediates[k]))
+        if x == lastx and k >= 0 and x == sintermediates[k]:
+            lasti = i + len(sintermediates) - k
+            break
 
-        if not used[x]:
+        # print("(2) %d < %d and %s and %d >= 0 and %d == %d" % (x, lastx, not used[x], k, x, sintermediates[k]))
+        if x < lastx and not used[x] and k >= 0 and x == sintermediates[k]:
+            # print("[%d] -> %d" % (j, x))
             seq[j] = x
             j += 1
             used[x] = True
-        last.pop()
-    elif not used[x] and x < lastx:
-        intermediates.append(x)
-        used[x] = True
+            k -= 1
+    if not used[lastx]:
+        seq[j] = lastx
+        j += 1
+        used[lastx] = True
+    i = lasti
 
 print(" ".join(str(x+1) for x in seq))
 
