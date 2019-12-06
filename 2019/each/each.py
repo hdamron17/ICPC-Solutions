@@ -19,21 +19,34 @@ last.sort(key=lambda x: x[1], reverse=True)
 seq = [None] * k
 j = 0
 used = [False] * k
-next = 0
+intermediates = []
 for i, x in enumerate(X):
     lastx, lasti = last[-1]
     if lasti == i:
         # This implies x == lastx
+        intermediates.sort()
+        jn = j + len(intermediates)
+        seq[j:jn] = intermediates
+        j = jn
+        for k in intermediates:
+            used[k] = True
+        intermediates = []
+
         if not used[x]:
             seq[j] = x
             j += 1
             used[x] = True
         last.pop()
-    elif x == next:
-        seq[j] = x
-        j += 1
+    elif not used[x] and x < lastx:
+        intermediates.append(x)
         used[x] = True
-    while next < k and used[next]:
-        next += 1
 
 print(" ".join(str(x+1) for x in seq))
+
+## Check
+i = 0
+for x in X:
+    if i < len(seq) and x == seq[i]:
+        i += 1
+if i != len(seq):
+    print("Not valid after index %d of %d: %d" % (i, len(seq), seq[i]))
