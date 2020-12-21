@@ -5,7 +5,10 @@
 # Notes: Determines last instance of each number in the sequence then iterates
 #        through the lasts and adds everything before them in order
 #        TODO: issue with current implementation is that if there are duplicates
-#        in a segment before a last value (e.g. [1 2 3 1 3 2 1])
+#        in a segment before a last value (e.g. [2 1 3 2 3 2 1])
+#        NOTE: what needs to happen is we find the lexicographically least
+#        subsequence of each segment before a last value (the naive approach
+#        of repeatedly taking the minimum is O(n^2))
 
 n, k = (int(x) for x in input().split())
 X = [int(input())-1 for _ in range(n)]
